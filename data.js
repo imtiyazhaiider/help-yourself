@@ -1,15 +1,2 @@
-const categories = [
-
-    "Plumber",
-
-    "Electrician",
-
-    "Mechanic",
-
-    "Carpenter",
-
-    "Mason",
-
-    "Tutor"
-
-];
+// Categories are now loaded directly from Supabase.
+// No hard-coded categories are needed here.

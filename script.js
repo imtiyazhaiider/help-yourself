@@ -5,17 +5,14 @@
 const SUPABASE_URL =
     "https://hdbohzbyfpolifmexyao.supabase.co";
 
-
 const SUPABASE_PUBLISHABLE_KEY =
     "sb_publishable_CiB700YWNWVowMCAG6gnNQ_FMlkVqdy";
-
 
 const supabaseClient =
     supabase.createClient(
         SUPABASE_URL,
         SUPABASE_PUBLISHABLE_KEY
     );
-
 
 
 /* =================================
@@ -25,73 +22,141 @@ const supabaseClient =
 const categoriesContainer =
     document.getElementById("categories");
 
-
 const peopleContainer =
     document.getElementById("people");
-
 
 const categoryTitle =
     document.getElementById("category-title");
 
-
 const peopleSection =
     document.getElementById("people-section");
-
 
 const backButton =
     document.getElementById("back-button");
 
-
 const homeSection =
     document.getElementById("home-section");
-
 
 const locationFilter =
     document.getElementById("location-filter");
 
 
-
 /* =================================
-   SHOW CATEGORIES
+   LOAD CATEGORIES FROM DATABASE
 ================================= */
 
-function showCategories() {
+async function loadCategories() {
+
+    categoriesContainer.innerHTML =
+        "<p>Loading categories...</p>";
+
+
+    const { data, error } =
+        await supabaseClient
+            .from("contacts")
+            .select("category");
+
+
+    if (error) {
+
+        console.error(
+            "Error loading categories:",
+            error
+        );
+
+        categoriesContainer.innerHTML =
+            "<p>Unable to load categories.</p>";
+
+        return;
+
+    }
+
+
+    /* Get unique categories */
+
+    const uniqueCategories = [
+
+        ...new Set(
+
+            data
+                .map(function(person) {
+
+                    return person.category;
+
+                })
+                .filter(function(category) {
+
+                    return category &&
+                           category.trim() !== "";
+
+                })
+
+        )
+
+    ];
+
+
+    /* Sort alphabetically */
+
+    uniqueCategories.sort(
+        function(a, b) {
+
+            return a.localeCompare(b);
+
+        }
+    );
+
 
     categoriesContainer.innerHTML = "";
 
 
-    categories.forEach(function(category) {
+    /* No categories */
 
-        const categoryButton =
-            document.createElement("div");
+    if (uniqueCategories.length === 0) {
 
+        categoriesContainer.innerHTML =
+            "<p>No categories available.</p>";
 
-        categoryButton.className =
-            "category";
+        return;
 
-
-        categoryButton.textContent =
-            category;
+    }
 
 
-        categoryButton.addEventListener(
-            "click",
-            function() {
+    /* Create category buttons */
 
-                showPeople(category);
+    uniqueCategories.forEach(
+        function(category) {
 
-            }
-        );
+            const categoryButton =
+                document.createElement("div");
 
 
-        categoriesContainer.appendChild(
-            categoryButton
-        );
+            categoryButton.className =
+                "category";
 
-    });
+
+            categoryButton.textContent =
+                category;
+
+
+            categoryButton.addEventListener(
+                "click",
+                function() {
+
+                    showPeople(category);
+
+                }
+            );
+
+
+            categoriesContainer.appendChild(
+                categoryButton
+            );
+
+        }
+    );
 
 }
-
 
 
 /* =================================
@@ -171,7 +236,6 @@ async function loadLocations(category) {
 }
 
 
-
 /* =================================
    SHOW PEOPLE
 ================================= */
@@ -203,7 +267,6 @@ async function showPeople(category) {
     );
 
 }
-
 
 
 /* =================================
@@ -317,7 +380,6 @@ async function displayPeople(
 }
 
 
-
 /* =================================
    LOCATION FILTER
 ================================= */
@@ -343,7 +405,6 @@ locationFilter.addEventListener(
 );
 
 
-
 /* =================================
    BACK TO CATEGORIES
 ================================= */
@@ -363,13 +424,12 @@ backButton.addEventListener(
 );
 
 
-
 /* =================================
    START APPLICATION
 ================================= */
 
-showCategories();
-
-
 peopleSection.style.display =
     "none";
+
+
+loadCategories();
