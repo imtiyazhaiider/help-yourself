@@ -1,57 +1,53 @@
-const categoriesContainer =
-    document.getElementById("categories");
+/* =================================
+   SUPABASE CONNECTION
+================================= */
 
-const peopleContainer =
-    document.getElementById("people");
+const SUPABASE_URL =
+    "https://hdbohzbyfpolifmexyao.supabase.co";
 
-const categoryTitle =
-    document.getElementById("category-title");
 
-const peopleSection =
-    document.getElementById("people-section");
+const SUPABASE_PUBLISHABLE_KEY =
+    "sb_publishable_CiB700YWNWVowMCAG6gnNQ_FMlkVqdy";
 
-const backButton =
-    document.getElementById("back-button");
 
-const homeSection =
-    document.getElementById("home-section");
-
-const adminButton =
-    document.getElementById("admin-button");
-
-const addSection =
-    document.getElementById("add-section");
-
-const addBackButton =
-    document.getElementById("add-back-button");
-
-const contactForm =
-    document.getElementById("contact-form");
-
-const categorySelect =
-    document.getElementById("category");
-
-const locationFilter =
-    document.getElementById("location-filter");
+const supabaseClient =
+    supabase.createClient(
+        SUPABASE_URL,
+        SUPABASE_PUBLISHABLE_KEY
+    );
 
 
 
 /* =================================
-   LOAD SAVED CONTACTS
+   ELEMENTS
 ================================= */
 
-const savedContacts =
-    localStorage.getItem("helpYourselfContacts");
+const categoriesContainer =
+    document.getElementById("categories");
 
 
-if (savedContacts) {
+const peopleContainer =
+    document.getElementById("people");
 
-    const savedPeople =
-        JSON.parse(savedContacts);
 
-    people.push(...savedPeople);
+const categoryTitle =
+    document.getElementById("category-title");
 
-}
+
+const peopleSection =
+    document.getElementById("people-section");
+
+
+const backButton =
+    document.getElementById("back-button");
+
+
+const homeSection =
+    document.getElementById("home-section");
+
+
+const locationFilter =
+    document.getElementById("location-filter");
 
 
 
@@ -102,7 +98,7 @@ function showCategories() {
    LOAD LOCATIONS
 ================================= */
 
-function loadLocations(category) {
+async function loadLocations(category) {
 
     locationFilter.innerHTML = `
         <option value="all">
@@ -111,17 +107,38 @@ function loadLocations(category) {
     `;
 
 
+    const { data, error } =
+        await supabaseClient
+            .from("contacts")
+            .select("location")
+            .eq("category", category);
+
+
+    if (error) {
+
+        console.error(
+            "Error loading locations:",
+            error
+        );
+
+        return;
+
+    }
+
+
     const locations = [];
 
 
-    people.forEach(function(person) {
+    data.forEach(function(person) {
 
         if (
-            person.category === category &&
+            person.location &&
             !locations.includes(person.location)
         ) {
 
-            locations.push(person.location);
+            locations.push(
+                person.location
+            );
 
         }
 
@@ -159,13 +176,11 @@ function loadLocations(category) {
    SHOW PEOPLE
 ================================= */
 
-function showPeople(category) {
+async function showPeople(category) {
 
     homeSection.style.display =
         "none";
 
-    addSection.style.display =
-        "none";
 
     peopleSection.style.display =
         "block";
@@ -175,14 +190,17 @@ function showPeople(category) {
         category;
 
 
-    loadLocations(category);
-
-
     locationFilter.value =
         "all";
 
 
-    displayPeople(category, "all");
+    await loadLocations(category);
+
+
+    await displayPeople(
+        category,
+        "all"
+    );
 
 }
 
@@ -192,45 +210,71 @@ function showPeople(category) {
    DISPLAY PEOPLE
 ================================= */
 
-function displayPeople(
+async function displayPeople(
     category,
     selectedLocation
 ) {
 
-    peopleContainer.innerHTML = "";
+    peopleContainer.innerHTML =
+        "<p>Loading contacts...</p>";
 
 
-    const filteredPeople =
-        people.filter(function(person) {
-
-            const correctCategory =
-                person.category === category;
-
-
-            const correctLocation =
-                selectedLocation === "all" ||
-                person.location === selectedLocation;
+    let query =
+        supabaseClient
+            .from("contacts")
+            .select(
+                "id, name, category, phone, location"
+            )
+            .eq("category", category);
 
 
-            return (
-                correctCategory &&
-                correctLocation
+    if (selectedLocation !== "all") {
+
+        query =
+            query.eq(
+                "location",
+                selectedLocation
             );
 
-        });
+    }
 
 
-    if (filteredPeople.length === 0) {
+    const { data, error } =
+        await query;
+
+
+    if (error) {
+
+        console.error(
+            "Error loading contacts:",
+            error
+        );
+
 
         peopleContainer.innerHTML =
-            "<p>No contact found.</p>";
+            "<p>Unable to load contacts.</p>";
+
 
         return;
 
     }
 
 
-    filteredPeople.forEach(function(person) {
+    peopleContainer.innerHTML = "";
+
+
+    if (!data || data.length === 0) {
+
+        peopleContainer.innerHTML =
+            "<p>No contact found.</p>";
+
+
+        return;
+
+    }
+
+
+    data.forEach(function(person) {
 
         const personCard =
             document.createElement("div");
@@ -280,7 +324,7 @@ function displayPeople(
 
 locationFilter.addEventListener(
     "change",
-    function() {
+    async function() {
 
         const category =
             categoryTitle.textContent;
@@ -290,7 +334,7 @@ locationFilter.addEventListener(
             locationFilter.value;
 
 
-        displayPeople(
+        await displayPeople(
             category,
             selectedLocation
         );
@@ -311,204 +355,9 @@ backButton.addEventListener(
         peopleSection.style.display =
             "none";
 
-        homeSection.style.display =
-            "block";
-
-    }
-);
-
-
-
-/* =================================
-   OPEN ADD CONTACT
-================================= */
-
-adminButton.addEventListener(
-    "click",
-    function() {
-
-        homeSection.style.display =
-            "none";
-
-        peopleSection.style.display =
-            "none";
-
-        addSection.style.display =
-            "block";
-
-    }
-);
-
-
-
-/* =================================
-   BACK FROM ADD CONTACT
-================================= */
-
-addBackButton.addEventListener(
-    "click",
-    function() {
-
-        addSection.style.display =
-            "none";
 
         homeSection.style.display =
             "block";
-
-    }
-);
-
-
-
-/* =================================
-   LOAD CATEGORIES INTO DROPDOWN
-================================= */
-
-function loadCategoriesIntoForm() {
-
-    categorySelect.innerHTML = `
-        <option value="">
-            Select category
-        </option>
-    `;
-
-
-    categories.forEach(function(category) {
-
-        const option =
-            document.createElement("option");
-
-
-        option.value =
-            category;
-
-
-        option.textContent =
-            category;
-
-
-        categorySelect.appendChild(
-            option
-        );
-
-    });
-
-}
-
-
-
-/* =================================
-   ADD CONTACT
-================================= */
-
-contactForm.addEventListener(
-    "submit",
-    function(event) {
-
-        event.preventDefault();
-
-
-        const name =
-            document.getElementById(
-                "name"
-            ).value.trim();
-
-
-        const category =
-            document.getElementById(
-                "category"
-            ).value;
-
-
-        const phone =
-            document.getElementById(
-                "phone"
-            ).value.trim();
-
-
-        const location =
-            document.getElementById(
-                "location"
-            ).value.trim();
-
-
-
-        const newPerson = {
-
-            name: name,
-
-            category: category,
-
-            phone: phone,
-
-            location: location
-
-        };
-
-
-
-        /* Add to current data */
-
-        people.push(newPerson);
-
-
-
-        /* Get saved contacts */
-
-        const saved =
-            localStorage.getItem(
-                "helpYourselfContacts"
-            );
-
-
-        let userContacts = [];
-
-
-        if (saved) {
-
-            userContacts =
-                JSON.parse(saved);
-
-        }
-
-
-
-        /* Save new contact */
-
-        userContacts.push(
-            newPerson
-        );
-
-
-        localStorage.setItem(
-            "helpYourselfContacts",
-            JSON.stringify(userContacts)
-        );
-
-
-
-        alert(
-            "Contact added successfully!"
-        );
-
-
-
-        /* Reset form */
-
-        contactForm.reset();
-
-
-
-        /* Return home */
-
-        addSection.style.display =
-            "none";
-
-        homeSection.style.display =
-            "block";
-
-
-        showCategories();
 
     }
 );
@@ -521,10 +370,6 @@ contactForm.addEventListener(
 
 showCategories();
 
-loadCategoriesIntoForm();
 
 peopleSection.style.display =
-    "none";
-
-addSection.style.display =
     "none";

@@ -22,7 +22,12 @@
 
     <title>Help Yourself</title>
 
-    <link rel="stylesheet" href="style.css">
+
+    <link
+        rel="stylesheet"
+        href="style.css"
+    >
+
 
     <link
         rel="manifest"
@@ -53,10 +58,6 @@
 
             <div id="categories"></div>
 
-            <button id="admin-button">
-                + Add Contact
-            </button>
-
         </section>
 
 
@@ -68,6 +69,7 @@
                 ← Back to categories
             </button>
 
+
             <h2 id="category-title"></h2>
 
 
@@ -78,6 +80,7 @@
                 <label for="location-filter">
                     Filter by village
                 </label>
+
 
                 <select id="location-filter">
 
@@ -94,92 +97,24 @@
 
         </section>
 
-
-        <!-- Add Contact -->
-
-        <section id="add-section">
-
-            <button id="add-back-button">
-                ← Back
-            </button>
-
-            <h2>Add Contact</h2>
-
-
-            <form id="contact-form">
-
-                <label for="name">
-                    Name
-                </label>
-
-                <input
-                    type="text"
-                    id="name"
-                    placeholder="Enter person's name"
-                    required
-                >
-
-
-                <label for="category">
-                    Category
-                </label>
-
-                <select
-                    id="category"
-                    required
-                >
-
-                    <option value="">
-                        Select category
-                    </option>
-
-                </select>
-
-
-                <label for="phone">
-                    Phone Number
-                </label>
-
-                <input
-                    type="tel"
-                    id="phone"
-                    placeholder="Enter phone number"
-                    required
-                >
-
-
-                <label for="location">
-                    Village / Location
-                </label>
-
-                <input
-                    type="text"
-                    id="location"
-                    placeholder="Where does this person live?"
-                    required
-                >
-
-
-                <button
-                    type="submit"
-                    class="save-button"
-                >
-                    Save Contact
-                </button>
-
-            </form>
-
-        </section>
-
     </main>
 
+
+    <!-- Supabase -->
+
+    <script
+        src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"
+    ></script>
+
+
+    <!-- Application -->
 
     <script src="data.js"></script>
 
     <script src="script.js"></script>
 
 
-    <!-- Register Service Worker -->
+    <!-- Service Worker -->
 
     <script>
 

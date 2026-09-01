@@ -1,14 +1,27 @@
-const CACHE_NAME = "help-yourself-v1";
+const CACHE_NAME = "help-yourself-v2";
+
 
 const FILES_TO_CACHE = [
+
     "./",
+
     "./index.html",
+
     "./style.css",
+
     "./script.js",
+
     "./data.js",
+
     "./manifest.json"
+
 ];
 
+
+
+/* =================================
+   INSTALL
+================================= */
 
 self.addEventListener(
     "install",
@@ -30,6 +43,11 @@ self.addEventListener(
     }
 );
 
+
+
+/* =================================
+   ACTIVATE
+================================= */
 
 self.addEventListener(
     "activate",
@@ -64,6 +82,11 @@ self.addEventListener(
 );
 
 
+
+/* =================================
+   FETCH
+================================= */
+
 self.addEventListener(
     "fetch",
     function(event) {
@@ -78,6 +101,7 @@ self.addEventListener(
                         return cachedResponse;
 
                     }
+
 
                     return fetch(event.request);
 
