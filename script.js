@@ -8,11 +8,13 @@ const SUPABASE_URL =
 const SUPABASE_PUBLISHABLE_KEY =
     "sb_publishable_CiB700YWNWVowMCAG6gnNQ_FMlkVqdy";
 
+
 const supabaseClient =
     supabase.createClient(
         SUPABASE_URL,
         SUPABASE_PUBLISHABLE_KEY
     );
+
 
 
 /* =================================
@@ -22,33 +24,43 @@ const supabaseClient =
 const categoriesContainer =
     document.getElementById("categories");
 
+
 const peopleContainer =
     document.getElementById("people");
+
 
 const categoryTitle =
     document.getElementById("category-title");
 
+
 const peopleSection =
     document.getElementById("people-section");
+
 
 const backButton =
     document.getElementById("back-button");
 
+
 const homeSection =
     document.getElementById("home-section");
+
 
 const locationFilter =
     document.getElementById("location-filter");
 
 
+
 /* =================================
-   LOAD CATEGORIES FROM DATABASE
+   LOAD CATEGORIES
 ================================= */
 
 async function loadCategories() {
 
-    categoriesContainer.innerHTML =
-        "<p>Loading categories...</p>";
+    categoriesContainer.innerHTML = `
+        <div class="loading-message">
+            Loading services...
+        </div>
+    `;
 
 
     const { data, error } =
@@ -64,8 +76,14 @@ async function loadCategories() {
             error
         );
 
-        categoriesContainer.innerHTML =
-            "<p>Unable to load categories.</p>";
+
+        categoriesContainer.innerHTML = `
+            <div class="error-message">
+                Unable to load services.
+                Please try again.
+            </div>
+        `;
+
 
         return;
 
@@ -81,13 +99,14 @@ async function loadCategories() {
             data
                 .map(function(person) {
 
-                    return person.category;
+                    return person.category
+                        ? person.category.trim()
+                        : "";
 
                 })
                 .filter(function(category) {
 
-                    return category &&
-                           category.trim() !== "";
+                    return category !== "";
 
                 })
 
@@ -114,29 +133,82 @@ async function loadCategories() {
 
     if (uniqueCategories.length === 0) {
 
-        categoriesContainer.innerHTML =
-            "<p>No categories available.</p>";
+        categoriesContainer.innerHTML = `
+            <div class="empty-message">
+                No services available yet.
+            </div>
+        `;
+
 
         return;
 
     }
 
 
-    /* Create category buttons */
+    /* Create category cards */
 
     uniqueCategories.forEach(
         function(category) {
 
             const categoryButton =
-                document.createElement("div");
+                document.createElement("button");
 
 
             categoryButton.className =
                 "category";
 
 
-            categoryButton.textContent =
+            categoryButton.type =
+                "button";
+
+
+            /* Icon */
+
+            const icon =
+                document.createElement("span");
+
+
+            icon.className =
+                "category-icon";
+
+
+            icon.textContent =
+                getCategoryIcon(category);
+
+
+            /* Text */
+
+            const text =
+                document.createElement("span");
+
+
+            text.className =
+                "category-name";
+
+
+            text.textContent =
                 category;
+
+
+            /* Arrow */
+
+            const arrow =
+                document.createElement("span");
+
+
+            arrow.className =
+                "category-arrow";
+
+
+            arrow.textContent =
+                "→";
+
+
+            categoryButton.appendChild(icon);
+
+            categoryButton.appendChild(text);
+
+            categoryButton.appendChild(arrow);
 
 
             categoryButton.addEventListener(
@@ -157,6 +229,103 @@ async function loadCategories() {
     );
 
 }
+
+
+
+/* =================================
+   CATEGORY ICONS
+================================= */
+
+function getCategoryIcon(category) {
+
+    const name =
+        category.toLowerCase();
+
+
+    if (name.includes("electric")) {
+
+        return "⚡";
+
+    }
+
+
+    if (name.includes("plumb")) {
+
+        return "🔧";
+
+    }
+
+
+    if (
+        name.includes("auto") ||
+        name.includes("driver")
+    ) {
+
+        return "🚗";
+
+    }
+
+
+    if (
+        name.includes("tutor") ||
+        name.includes("teacher")
+    ) {
+
+        return "📚";
+
+    }
+
+
+    if (
+        name.includes("store") ||
+        name.includes("shop") ||
+        name.includes("kirana")
+    ) {
+
+        return "🛒";
+
+    }
+
+
+    if (name.includes("carpenter")) {
+
+        return "🪚";
+
+    }
+
+
+    if (name.includes("mason")) {
+
+        return "🧱";
+
+    }
+
+
+    if (name.includes("mechanic")) {
+
+        return "🔩";
+
+    }
+
+
+    if (name.includes("tailor")) {
+
+        return "🧵";
+
+    }
+
+
+    if (name.includes("barber")) {
+
+        return "✂️";
+
+    }
+
+
+    return "🛠️";
+
+}
+
 
 
 /* =================================
@@ -186,6 +355,7 @@ async function loadLocations(category) {
             error
         );
 
+
         return;
 
     }
@@ -210,7 +380,13 @@ async function loadLocations(category) {
     });
 
 
-    locations.sort();
+    locations.sort(
+        function(a, b) {
+
+            return a.localeCompare(b);
+
+        }
+    );
 
 
     locations.forEach(function(location) {
@@ -234,6 +410,7 @@ async function loadLocations(category) {
     });
 
 }
+
 
 
 /* =================================
@@ -269,6 +446,7 @@ async function showPeople(category) {
 }
 
 
+
 /* =================================
    DISPLAY PEOPLE
 ================================= */
@@ -278,8 +456,11 @@ async function displayPeople(
     selectedLocation
 ) {
 
-    peopleContainer.innerHTML =
-        "<p>Loading contacts...</p>";
+    peopleContainer.innerHTML = `
+        <div class="loading-message">
+            Finding people...
+        </div>
+    `;
 
 
     let query =
@@ -288,7 +469,10 @@ async function displayPeople(
             .select(
                 "id, name, category, phone, location"
             )
-            .eq("category", category);
+            .eq(
+                "category",
+                category
+            );
 
 
     if (selectedLocation !== "all") {
@@ -314,8 +498,12 @@ async function displayPeople(
         );
 
 
-        peopleContainer.innerHTML =
-            "<p>Unable to load contacts.</p>";
+        peopleContainer.innerHTML = `
+            <div class="error-message">
+                Unable to load contacts.
+                Please try again.
+            </div>
+        `;
 
 
         return;
@@ -328,8 +516,11 @@ async function displayPeople(
 
     if (!data || data.length === 0) {
 
-        peopleContainer.innerHTML =
-            "<p>No contact found.</p>";
+        peopleContainer.innerHTML = `
+            <div class="empty-message">
+                No one found in this location.
+            </div>
+        `;
 
 
         return;
@@ -339,36 +530,127 @@ async function displayPeople(
 
     data.forEach(function(person) {
 
+        /* Card */
+
         const personCard =
-            document.createElement("div");
+            document.createElement("article");
 
 
         personCard.className =
             "person";
 
 
-        personCard.innerHTML = `
+        /* Top */
 
-            <h3>
-                ${person.name}
-            </h3>
+        const personTop =
+            document.createElement("div");
 
-            <p>
-                📍 ${person.location}
-            </p>
 
-            <p>
-                📞 ${person.phone}
-            </p>
+        personTop.className =
+            "person-top";
 
-            <a
-                class="call-button"
-                href="tel:${person.phone}"
-            >
-                Call
-            </a>
 
-        `;
+        /* Avatar */
+
+        const avatar =
+            document.createElement("div");
+
+
+        avatar.className =
+            "person-avatar";
+
+
+        avatar.textContent =
+            getInitials(person.name);
+
+
+        /* Details */
+
+        const details =
+            document.createElement("div");
+
+
+        details.className =
+            "person-details";
+
+
+        const name =
+            document.createElement("h3");
+
+
+        name.textContent =
+            person.name;
+
+
+        const category =
+            document.createElement("span");
+
+
+        category.className =
+            "person-category";
+
+
+        category.textContent =
+            person.category;
+
+
+        details.appendChild(name);
+
+        details.appendChild(category);
+
+
+        personTop.appendChild(avatar);
+
+        personTop.appendChild(details);
+
+
+        /* Location */
+
+        const location =
+            document.createElement("p");
+
+
+        location.className =
+            "person-location";
+
+
+        location.textContent =
+            "📍 " + person.location;
+
+
+        /* Call button */
+
+        const callButton =
+            document.createElement("a");
+
+
+        callButton.className =
+            "call-button";
+
+
+        callButton.href =
+            "tel:" + person.phone;
+
+
+        callButton.textContent =
+            "☎ Call";
+
+
+        /* Add elements */
+
+        personCard.appendChild(
+            personTop
+        );
+
+
+        personCard.appendChild(
+            location
+        );
+
+
+        personCard.appendChild(
+            callButton
+        );
 
 
         peopleContainer.appendChild(
@@ -378,6 +660,42 @@ async function displayPeople(
     });
 
 }
+
+
+
+/* =================================
+   GET INITIALS
+================================= */
+
+function getInitials(name) {
+
+    if (!name) {
+
+        return "?";
+
+    }
+
+
+    const words =
+        name.trim().split(/\s+/);
+
+
+    if (words.length === 1) {
+
+        return words[0]
+            .substring(0, 2)
+            .toUpperCase();
+
+    }
+
+
+    return (
+        words[0].charAt(0) +
+        words[1].charAt(0)
+    ).toUpperCase();
+
+}
+
 
 
 /* =================================
@@ -405,6 +723,7 @@ locationFilter.addEventListener(
 );
 
 
+
 /* =================================
    BACK TO CATEGORIES
 ================================= */
@@ -422,6 +741,7 @@ backButton.addEventListener(
 
     }
 );
+
 
 
 /* =================================

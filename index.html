@@ -12,12 +12,12 @@
 
     <meta
         name="theme-color"
-        content="#1f2937"
+        content="#0f766e"
     >
 
     <meta
         name="description"
-        content="Find local service providers in your area."
+        content="Find trusted local service providers in your area."
     >
 
     <title>Help Yourself</title>
@@ -39,82 +39,233 @@
 
 <body>
 
-    <header>
+    <!-- =================================
+         HEADER
+    ================================== -->
 
-        <h1>Help Yourself</h1>
+    <header class="app-header">
 
-        <p>Find the person you need.</p>
+        <div class="header-content">
+
+            <div class="brand-icon">
+                🤝
+            </div>
+
+            <div>
+
+                <h1>
+                    Help Yourself
+                </h1>
+
+                <p>
+                    Find the right person, right when you need them.
+                </p>
+
+            </div>
+
+        </div>
 
     </header>
 
 
+
     <main>
 
-        <!-- Home -->
 
-        <section id="home-section">
+        <!-- =================================
+             HOME
+        ================================== -->
 
-            <h2>Categories</h2>
+        <section
+            id="home-section"
+            class="home-section"
+        >
 
-            <div id="categories"></div>
+            <div class="welcome-card">
 
-        </section>
+                <span class="welcome-badge">
+                    LOCAL HELP, MADE SIMPLE
+                </span>
 
+                <h2>
+                    What do you need?
+                </h2>
 
-        <!-- People -->
-
-        <section id="people-section">
-
-            <button id="back-button">
-                ← Back to categories
-            </button>
-
-
-            <h2 id="category-title"></h2>
-
-
-            <!-- Location Filter -->
-
-            <div class="filter-box">
-
-                <label for="location-filter">
-                    Filter by village
-                </label>
-
-
-                <select id="location-filter">
-
-                    <option value="all">
-                        All villages
-                    </option>
-
-                </select>
+                <p>
+                    Find electricians, tutors, drivers,
+                    shops and other local services.
+                </p>
 
             </div>
 
 
-            <div id="people"></div>
+            <div class="section-heading">
+
+                <div>
+
+                    <h2>
+                        Categories
+                    </h2>
+
+                    <p>
+                        Choose a service to get started
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div id="categories"></div>
+
+
+            <div class="info-card">
+
+                <span class="info-icon">
+                    💡
+                </span>
+
+                <div>
+
+                    <strong>
+                        Need someone nearby?
+                    </strong>
+
+                    <p>
+                        Choose a category and find
+                        available contacts by location.
+                    </p>
+
+                </div>
+
+            </div>
 
         </section>
+
+
+
+        <!-- =================================
+             PEOPLE
+        ================================== -->
+
+        <section
+            id="people-section"
+            class="people-section"
+        >
+
+
+            <button
+                id="back-button"
+                class="back-button"
+            >
+                ← Categories
+            </button>
+
+
+            <div class="category-header">
+
+                <span class="category-label">
+                    SERVICE
+                </span>
+
+                <h2 id="category-title"></h2>
+
+                <p>
+                    Find someone who can help you.
+                </p>
+
+            </div>
+
+
+            <!-- =================================
+                 LOCATION FILTER
+            ================================== -->
+
+            <div class="filter-box">
+
+                <div class="filter-icon">
+                    📍
+                </div>
+
+                <div class="filter-content">
+
+                    <label for="location-filter">
+                        Your location
+                    </label>
+
+                    <select
+                        id="location-filter"
+                    >
+
+                        <option value="all">
+                            All villages
+                        </option>
+
+                    </select>
+
+                </div>
+
+            </div>
+
+
+            <!-- =================================
+                 CONTACTS
+            ================================== -->
+
+            <div
+                id="people"
+                class="people-list"
+            ></div>
+
+
+        </section>
+
 
     </main>
 
 
-    <!-- Supabase -->
+
+    <!-- =================================
+         FOOTER
+    ================================== -->
+
+    <footer>
+
+        <p>
+            Help Yourself
+        </p>
+
+        <span>
+            Connecting people with local help.
+        </span>
+
+    </footer>
+
+
+
+    <!-- =================================
+         SUPABASE
+    ================================== -->
 
     <script
         src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"
     ></script>
 
 
-    <!-- Application -->
+
+    <!-- =================================
+         APPLICATION
+    ================================== -->
 
     <script src="data.js?v=2"></script>
 
     <script src="script.js?v=2"></script>
 
 
-    <!-- Service Worker -->
+
+    <!-- =================================
+         SERVICE WORKER
+    ================================== -->
 
     <script>
 
@@ -134,6 +285,7 @@
         }
 
     </script>
+
 
 </body>
 
