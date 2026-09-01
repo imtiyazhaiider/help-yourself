@@ -1,0 +1,342 @@
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+
+body {
+    font-family: Arial, sans-serif;
+
+    background-color: #f4f6f8;
+
+    color: #222;
+}
+
+
+/* Header */
+
+header {
+    background-color: #1f2937;
+
+    color: white;
+
+    padding: 35px 20px;
+
+    text-align: center;
+}
+
+
+header h1 {
+    font-size: 32px;
+
+    margin-bottom: 8px;
+}
+
+
+header p {
+    font-size: 16px;
+
+    color: #d1d5db;
+}
+
+
+/* Main */
+
+main {
+    width: 100%;
+
+    max-width: 700px;
+
+    margin: 0 auto;
+
+    padding: 25px 16px 40px;
+}
+
+
+h2 {
+    font-size: 22px;
+
+    margin-bottom: 18px;
+}
+
+
+/* Categories */
+
+#categories {
+    display: grid;
+
+    grid-template-columns: repeat(2, 1fr);
+
+    gap: 12px;
+}
+
+
+.category {
+    background-color: white;
+
+    padding: 22px 10px;
+
+    text-align: center;
+
+    border-radius: 12px;
+
+    border: 1px solid #e5e7eb;
+
+    font-size: 17px;
+
+    font-weight: bold;
+
+    cursor: pointer;
+
+    transition:
+        transform 0.15s,
+        box-shadow 0.15s;
+}
+
+
+.category:hover {
+    transform: translateY(-2px);
+
+    box-shadow:
+        0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+
+/* People */
+
+#people-section {
+    display: none;
+
+    margin-top: 5px;
+}
+
+
+#category-title {
+    margin-bottom: 15px;
+}
+
+
+/* Filter */
+
+.filter-box {
+    background-color: white;
+
+    padding: 15px;
+
+    margin-bottom: 18px;
+
+    border-radius: 10px;
+
+    border: 1px solid #e5e7eb;
+}
+
+
+.filter-box label {
+    display: block;
+
+    margin-bottom: 7px;
+
+    font-size: 14px;
+
+    font-weight: bold;
+}
+
+
+#location-filter {
+    width: 100%;
+
+    padding: 11px;
+
+    border: 1px solid #d1d5db;
+
+    border-radius: 7px;
+
+    background-color: white;
+
+    font-size: 16px;
+}
+
+
+/* Person */
+
+.person {
+    background-color: white;
+
+    padding: 20px;
+
+    margin-bottom: 12px;
+
+    border-radius: 12px;
+
+    border: 1px solid #e5e7eb;
+}
+
+
+.person h3 {
+    font-size: 19px;
+
+    margin-bottom: 10px;
+}
+
+
+.person p {
+    margin-bottom: 7px;
+
+    color: #555;
+}
+
+
+/* Call button */
+
+.call-button {
+    display: block;
+
+    margin-top: 15px;
+
+    padding: 12px;
+
+    text-align: center;
+
+    background-color: #16a34a;
+
+    color: white;
+
+    text-decoration: none;
+
+    border-radius: 8px;
+
+    font-weight: bold;
+}
+
+
+.call-button:hover {
+    background-color: #15803d;
+}
+
+
+/* Back buttons */
+
+#back-button,
+#add-back-button {
+    border: none;
+
+    background: none;
+
+    color: #2563eb;
+
+    font-size: 15px;
+
+    font-weight: bold;
+
+    cursor: pointer;
+
+    margin-bottom: 18px;
+
+    padding: 0;
+}
+
+
+/* Add Contact */
+
+#add-section {
+    display: none;
+}
+
+
+#admin-button {
+    width: 100%;
+
+    margin-top: 30px;
+
+    padding: 14px;
+
+    border: none;
+
+    border-radius: 8px;
+
+    background-color: #2563eb;
+
+    color: white;
+
+    font-size: 16px;
+
+    font-weight: bold;
+
+    cursor: pointer;
+}
+
+
+#contact-form {
+    background-color: white;
+
+    padding: 20px;
+
+    border-radius: 12px;
+
+    border: 1px solid #e5e7eb;
+}
+
+
+#contact-form label {
+    display: block;
+
+    margin-top: 15px;
+
+    margin-bottom: 6px;
+
+    font-weight: bold;
+}
+
+
+#contact-form input,
+#contact-form select {
+    width: 100%;
+
+    padding: 12px;
+
+    border: 1px solid #d1d5db;
+
+    border-radius: 7px;
+
+    font-size: 16px;
+}
+
+
+.save-button {
+    width: 100%;
+
+    margin-top: 25px;
+
+    padding: 13px;
+
+    border: none;
+
+    border-radius: 8px;
+
+    background-color: #16a34a;
+
+    color: white;
+
+    font-size: 16px;
+
+    font-weight: bold;
+
+    cursor: pointer;
+}
+
+
+.save-button:hover {
+    background-color: #15803d;
+}
+
+
+/* Desktop */
+
+@media (min-width: 600px) {
+
+    #categories {
+        grid-template-columns: repeat(3, 1fr);
+    }
+
+}
